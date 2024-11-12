@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Learning Platform</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <h1>E-Learn</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#">Home</a></li>
+                <li class="dropdown">
+                    <a href="#">Courses</a>
+                    <ul class="dropdown-content">
+                        <li><a href="year1.html">Year 1</a></li>
+                        <li><a href="year2.html">Year 2</a></li>
+                        <li><a href="year3.html">Year 3</a></li>
+                        <li><a href="year4.html">Year 4</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Faculties</a>
+                    <ul class="dropdown-content">
+                        <li><a href="BIT.html">BIT</a></li>
+                        <li><a href="AESS.html">AESS</a></li>
+                        <li><a href="LAW.html">LAW</a></li>
+                        <li><a href="SoM.html">SoM</a></li>
+                    </ul>
+                </li>
+                <li><a href="login.html">Student Login</a></li>
+                <li><a href="register.html">Register</a></li>
+                <li><a href="#contact">Contact Us</a></li>
+                <li><a href="admin-dashboard.html">Admin Panel</a></li> 
+                <li><a href="admin-login.html">Admin Login</a></li>
+                >
+
+
+
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <section id="home">
+        <h2>Enhance Your Future With eLearning</h2>
+        <p>
+        This platform provides students with access to interactive lessons, quizzes, and study materials. Everything is designed to help you succeed in your studies, aligned with your curriculum.
+        </p>
+        <div class="btn">
+          <li><a class="btn-two" href="#login">Visit Courses</a></li>
+        </div>
+    </section>
+
+    <!-- Contact Us Section -->
+    <section id="contact">
+        <h1>Contact Us</h1>
+        <p>For any queries or assistance please contact us</p>
+        <div class="contact-box">
+            <div class="contact-image">
+                <img
+                    src="https://img.freepik.com/free-vector/flat-design-illustration-customer-support_23-2148887720.jpg?w=996&t=st=1678294756~exp=1678295356~hmac=fdf1cb1d0bedd5c8095ebce03993e1c685a8b8d25c8db48bd278c26f0a1f46fd"
+                    alt="contact us"
+                />
+            </div>
+
+            <div class="form">
+                <h3>Let us help</h3>
+                <label for="name">Name</label>
+                <input type="text" id="name" placeholder="Enter your name" />
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="Enter your Email" />
+                <label for="message">Message</label>
+                <textarea id="message" placeholder="Enter your message"></textarea>
+                <div class="send-btn">
+                    <button id="sendMessageButton">Send Message</button>
+                </div>
+                <!-- Message Display -->
+                <div id="formMessage" style="display: none; padding: 10px; font-weight: bold;"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-col">
+        <h3>eLearning</h3>
+        <li><a href="#">Home</a></li>
+        <li><a href="#features">About us</a></li>
+        <li><a href="#course">Courses</a></li>
+        <li><a href="#community">Community</a></li>
+        <li><a href="#contact">Contact Us</a></li>
+      </div>
+
+      <div class="footer-col">
+        <h3>Resources</h3>
+        <li><a href="#course">Web Development</a></li>
+        <li><a href="#course">App Development</a></li>
+        <li><a href="#course">Data Science</a></li>
+        <li><a href="#course">Cloud Computing</a></li>
+      </div>
+
+      <div class="footer-col">
+        <h3>Follow us</h3>
+        <li>Instagram</li>
+        <li>Facebook</li>
+        <li>Linkedin</li>
+        <li>Github</li>
+      </div>
+    </footer>
+
+    <!-- JavaScript for the Contact Form -->
+    <script>
+        document.getElementById("sendMessageButton").addEventListener("click", function(event) {
+            event.preventDefault();
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const message = document.getElementById("message").value;
+            const formMessage = document.getElementById("formMessage");
+
+            if (name && email && message) {
+                formMessage.style.display = "block";
+                formMessage.style.color = "green";
+                formMessage.textContent = "Thank you, " + name + "! Your message has been sent.";
+            } else {
+                formMessage.style.display = "block";
+                formMessage.style.color = "red";
+                formMessage.textContent = "Please fill in all fields before sending your message.";
+            }
+        });
+    </script>
+
+</body>
+</html>

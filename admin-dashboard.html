@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - E-Learning Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <!-- Navigation Bar for Admin Panel -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <h1>E-Learn Admin</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="admin-dashboard.html">Dashboard</a></li>
+                <li><a href="user-management.html">User Management</a></li>
+                <li><a href="add-course.html">Add Course</a></li>
+                <li><a href="logout.html">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Admin Main Content -->
+    <main id="admin-main">
+        <!-- Dashboard Section with Chart -->
+        <section id="dashboard">
+            <h1>Welcome to the Admin Panel</h1>
+            <p>Here, you can manage users, courses, and view analytics.</p>
+
+            <h3>Site Analytics</h3>
+            <canvas id="analyticsChart" width="400" height="200"></canvas>
+        </section>
+
+        <!-- User Management Section -->
+        <section id="user-management" style="display:none;">
+            <h1>User Management</h1>
+            <table id="userTable">
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- User data will be injected dynamically -->
+                </tbody>
+            </table>
+            <button id="loadUsers">Load Users</button>
+        </section>
+
+        <!-- Add User Form Section -->
+        <section id="add-user" style="display:none;">
+            <h1>Add New User</h1>
+            <form id="userForm">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required />
+
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required />
+
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required />
+
+                <button type="submit">Add User</button>
+            </form>
+        </section>
+    </main>
+
+    <!-- JavaScript for Dynamic Features -->
+    <script>
+        // Load Users with AJAX Simulation
+        document.getElementById("loadUsers").addEventListener("click", function() {
+            setTimeout(function() {
+                const users = [
+                    { id: 1, name: "John Doe", email: "johndoe@example.com" },
+                    { id: 2, name: "Jane Smith", email: "janesmith@example.com" },
+                    { id: 3, name: "Sam Brown", email: "sambrown@example.com" }
+                ];
+
+                const tableBody = document.querySelector("#userTable tbody");
+                tableBody.innerHTML = "";
+
+                users.forEach(user => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${user.id}</td>
+                        <td>${user.name}</td>
+                        <td>${user.email}</td>
+                        <td><button>Edit</button> <button>Delete</button></td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }, 1000);
+        });
+
+        // Site Analytics Chart (Chart.js)
+        const data = {
+            labels: ['January', 'February', 'March', 'April', 'May'],
+            datasets: [{
+                label: 'Number of Users',
+                data: [50, 60, 70, 80, 90],
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                fill: true
+            }, {
+                label: 'Number of Courses',
+                data: [5, 10, 15, 20, 25],
+                borderColor: 'rgba(153, 102, 255, 1)',
+                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                fill: true
+            }]
+        };
+
+        const ctx = document.getElementById('analyticsChart').getContext('2d');
+        const analyticsChart = new Chart(ctx, {
+            type: 'line',
+            data: data,
+            options: {
+                responsive: true,
+                scales: {
+                    x: { beginAtZero: true },
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // Form Validation for Add User
+        document.getElementById("userForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const username = document.getElementById("username").value;
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            if (!username || !email || !password) {
+                alert("Please fill out all fields.");
+                return;
+            }
+
+            const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+            if (!emailPattern.test(email)) {
+                alert("Please enter a valid email address.");
+                return;
+            }
+
+            alert("User added successfully!");
+        });
+    </script>
+
+</body>
+</html>
