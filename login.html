@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Login</title>
-    <link rel="stylesheet" href="login-style.css">
+    <link rel="stylesheet" href="css/login-style.css">
 </head>
 <body>
 
     <div class="login-container">
         <h2>Student Login</h2>
-        <form action="/student-dashboard" method="POST">
+        <form action="./server/login.php" method="POST">
             <div class="input-group">
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" required>
@@ -25,6 +25,9 @@
         </form>
         <div class="forgot-password">
             <a href="#">Forgot Password?</a>
+        </div>
+        <div class="forgot-password">
+            <p>I don't have an account <a href="register.html">Register</a></p>
         </div>
     </div>
 

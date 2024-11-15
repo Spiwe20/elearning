@@ -23,6 +23,9 @@ body {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     width: 400px;
     text-align: center;
+    position: relative;
+    top: 20rem;
+    
 }
 
 .registration-container h2 {
@@ -35,6 +38,7 @@ body {
 .input-group {
     margin-bottom: 20px;
     text-align: left;
+    /* margin-top: 15rem; */
 }
 
 .input-group label {

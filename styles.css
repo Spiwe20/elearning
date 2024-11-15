@@ -420,7 +420,7 @@ footer {
       width: 220px;
       height: 100vh;
       background-color: #fff;
-      backdrop-filter: blur(4.5px);
+      /* backdrop-filter: blur(4.5px); */
       display: flex;
       flex-direction: column;
       justify-content: flex-start;

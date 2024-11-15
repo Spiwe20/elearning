@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignments</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .alert {
+            transition: opacity 0.5s;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <div class="container mx-auto p-4">
+        <h1 class="text-3xl font-bold mb-4">Assignments</h1>
+
+        <!-- Tabs -->
+        <div class="mb-4">
+            <button class="tab-button bg-blue-500 text-white px-4 py-2 rounded mr-2" onclick="showTab('manage-assignments')">Manage Assignments</button>
+            <button class="tab-button bg-blue-500 text-white px-4 py-2 rounded" onclick="showTab('received-assignments')">Received Assignments</button>
+        </div>
+
+        <!-- Alert Messages -->
+        <div id="alert" class="alert hidden bg-green-500 text-white p-4 rounded mb-4">
+            <span id="alert-message"></span>
+        </div>
+
+        <!-- Manage Assignments Tab -->
+        <div id="manage-assignments" class="tab-content active">
+            <div class="bg-white p-6 rounded-lg shadow-lg mb-4">
+                <h2 class="text-xl font-bold mb-2">Create/Update Assignment</h2>
+                <form id="assignment-form">
+                    <input type="hidden" id="assignment-id" name="assignment-id">
+                    <div class="mb-4">
+                        <label for="program" class="block text-gray-700">Program</label>
+                        <select id="program" name="program" class="w-full p-2 border border-gray-300 rounded" required>
+                            <!-- Options will be populated by JavaScript -->
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label for="year" class="block text-gray-700">Year</label>
+                        <select id="year" name="year" class="w-full p-2 border border-gray-300 rounded" required>
+                            <option value="Year 1">Year 1</option>
+                            <option value="Year 2">Year 2</option>
+                            <option value="Year 3">Year 3</option>
+                            <option value="Year 4">Year 4</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label for="title" class="block text-gray-700">Title</label>
+                        <input type="text" id="title" name="title" class="w-full p-2 border border-gray-300 rounded" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="description" class="block text-gray-700">Description</label>
+                        <textarea id="description" name="description" class="w-full p-2 border border-gray-300 rounded" required></textarea>
+                    </div>
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Save</button>
+                </form>
+            </div>
+
+            <!-- Assignments List -->
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-xl font-bold mb-2">Submitted Assignments</h2>
+                <table class="w-full table-auto">
+                    <thead>
+                        <tr>
+                            <th class="px-4 py-2">Program</th>
+                            <th class="px-4 py-2">Year</th>
+                            <th class="px-4 py-2">Title</th>
+                            <th class="px-4 py-2">Description</th>
+                            <th class="px-4 py-2">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="assignments-list">
+                        <!-- Dynamic content will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Received Assignments Tab -->
+        <div id="received-assignments" class="tab-content">
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-xl font-bold mb-2">Received Assignments</h2>
+                <div id="received-assignments-list" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Dynamic content will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('assignment-form');
+            const alertBox = document.getElementById('alert');
+            const alertMessage = document.getElementById('alert-message');
+            const assignmentsList = document.getElementById('assignments-list');
+            const receivedAssignmentsList = document.getElementById('received-assignments-list');
+            const programSelect = document.getElementById('program');
+
+            let assignments = [];
+
+            // Fetch programs from the database and populate the select input
+            fetch('./server/get_programs.php')
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(program => {
+                        const option = document.createElement('option');
+                        option.value = program.id;
+                        option.textContent = program.program_name;
+                        programSelect.appendChild(option);
+                    });
+                });
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const id = document.getElementById('assignment-id').value;
+                const program = document.getElementById('program').value;
+                const year = document.getElementById('year').value;
+                const title = document.getElementById('title').value;
+                const description = document.getElementById('description').value;
+
+                const formData = new FormData();
+                formData.append('assignment-id', id);
+                formData.append('program', program);
+                formData.append('year', year);
+                formData.append('title', title);
+                formData.append('description', description);
+
+                fetch('server/assignments.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(data => {
+                    showAlert(data);
+                    fetchAssignments();
+                })
+                .catch(error => console.error('Error:', error));
+            });
+
+            function fetchAssignments() {
+                fetch('server/assignments.php')
+                    .then(response => response.json())
+                    .then(data => {
+                        assignments = data;
+                        renderAssignments();
+                    });
+            }
+
+            function renderAssignments() {
+                assignmentsList.innerHTML = '';
+                assignments.forEach(assignment => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="border px-4 py-2">${assignment.program_name}</td>
+                        <td class="border px-4 py-2">${assignment.year}</td>
+                        <td class="border px-4 py-2">${assignment.title}</td>
+                        <td class="border px-4 py-2">${assignment.description}</td>
+                        <td class="border px-4 py-2">
+                            <button class="bg-yellow-500 text-white px-2 py-1 rounded mr-2" onclick="editAssignment('${assignment.id}')">Edit</button>
+                            <button class="bg-red-500 text-white px-2 py-1 rounded" onclick="deleteAssignment('${assignment.id}')">Delete</button>
+                        </td>
+                    `;
+                    assignmentsList.appendChild(row);
+                });
+            }
+
+            window.editAssignment = function(id) {
+                const assignment = assignments.find(a => a.id === id);
+                document.getElementById('assignment-id').value = assignment.id;
+                document.getElementById('program').value = assignment.program_id;
+                document.getElementById('year').value = assignment.year;
+                document.getElementById('title').value = assignment.title;
+                document.getElementById('description').value = assignment.description;
+            };
+
+            window.deleteAssignment = function(id) {
+                fetch('server/assignments.php', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ id })
+                })
+                .then(response => response.text())
+                .then(data => {
+                    showAlert(data);
+                    fetchAssignments();
+                })
+                .catch(error => console.error('Error:', error));
+            };
+
+            function showAlert(message) {
+                alertMessage.textContent = message;
+                alertBox.classList.remove('hidden');
+                setTimeout(() => {
+                    alertBox.classList.add('hidden');
+                }, 3000);
+            }
+
+            function showTab(tabId) {
+                document.querySelectorAll('.tab-content').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                document.getElementById(tabId).classList.add('active');
+            }
+
+            fetchAssignments();
+        });
+    </script>
+</body>
+</html>
